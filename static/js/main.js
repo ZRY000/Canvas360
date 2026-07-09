@@ -13,7 +13,7 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 // Lightbox
 const lb = document.getElementById('lb');
 const lbImg = document.getElementById('lb-img');
-document.querySelectorAll('.figure img, .zoom').forEach(img => {
+document.querySelectorAll('.figure img, .pair img, .zoom').forEach(img => {
   img.addEventListener('click', () => {
     lbImg.src = img.dataset.full || img.src;
     lb.classList.add('open');
@@ -24,8 +24,8 @@ function closeLb() { lb.classList.remove('open'); document.body.style.overflow =
 lb.addEventListener('click', closeLb);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
 
-// Tabs
-document.querySelectorAll('.tabs').forEach(group => {
+// Tabs (panel-based, e.g. Applications)
+document.querySelectorAll('.tabs:not([data-gallery])').forEach(group => {
   const tabs = group.querySelectorAll('.tab');
   const panels = group.parentElement.querySelectorAll('.panel');
   tabs.forEach((tab, i) => tab.addEventListener('click', () => {
@@ -35,6 +35,32 @@ document.querySelectorAll('.tabs').forEach(group => {
     panels[i].classList.add('active');
   }));
 });
+
+// Dataset gallery: tab switching + carousel
+const GAL_ORDER = ['style_transfer', 'inpainting', 'outpainting', 'editing'];
+document.querySelectorAll('.tabs[data-gallery]').forEach(group => {
+  const tabs = group.querySelectorAll('.tab');
+  tabs.forEach((tab, i) => tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    GAL_ORDER.forEach((t, j) => {
+      const g = document.getElementById('gal-' + t);
+      if (g) g.style.display = (i === j) ? '' : 'none';
+    });
+  }));
+});
+
+function galNav(task, dir) {
+  const gal = document.getElementById('gal-' + task);
+  if (!gal) return;
+  const tracks = gal.querySelectorAll('.track');
+  let cur = 0;
+  tracks.forEach((t, i) => { if (t.classList.contains('active')) cur = i; });
+  tracks[cur].classList.remove('active');
+  const next = (cur + dir + tracks.length) % tracks.length;
+  tracks[next].classList.add('active');
+}
+
 
 // Copy bibtex
 function copyBib(btn) {

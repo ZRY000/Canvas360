@@ -22,6 +22,7 @@
   <div class="wrap nav-inner">
     <div class="nav-logo"><span class="dot"></span>Canvas360</div>
     <div class="nav-links">
+      <a href="#comparison">Comparison</a>
       <a href="#abstract">Abstract</a>
       <a href="#highlights">Highlights</a>
       <a href="#method">Method</a>
@@ -38,32 +39,33 @@
   <div class="wrap">
     <span class="badge reveal">Panoramic Image Generation</span>
     <h1 class="reveal">Enhancing In-context Panoramic Generation via Geometric-aware Pretraining</h1>
-    <p class="subtitle reveal">Meet <span class="method-name">Canvas360</span> &mdash; a two-stage framework that injects geometry-aware priors through parallel RGB&ndash;depth pretraining, then transfers them to diverse downstream tasks within a single unified model.</p>
+    <p class="subtitle reveal">Meet <span class="method-name">Canvas360</span> &nbsp;&mdash; a two-stage framework that injects geometry-aware priors through parallel RGB&ndash;depth pretraining, then transfers them to diverse downstream tasks within a single unified model.</p>
 
     <div class="authors reveal">
       <a href="#">Haoran Feng</a><sup>1,2,*</sup>&ensp;
       <a href="#">Ruiyang Zhang</a><sup>1,3,*</sup>&ensp;
-      <a href="#">Dizhe Zhang</a><sup>1,&#9993;</sup>&ensp;
+      <a href="#">Longyi Zhang</a><sup>2</sup>&ensp;
+      <a href="#">Dizhe Zhang</a><sup>1,&#9993;,&dagger;</sup>&ensp;
       <a href="#">Lu Qi</a><sup>1,4,&#9993;</sup>
     </div>
     <div class="affil reveal">
       <sup>1</sup>Insta360 Research&ensp; <sup>2</sup>Tsinghua University&ensp;
       <sup>3</sup>Beihang University&ensp; <sup>4</sup>Wuhan University
     </div>
-    <div class="notes reveal">* Equal Contribution&emsp;&#9993; Corresponding Author</div>
+    <div class="notes reveal">* Equal Contribution&emsp;&dagger; Project Lead&emsp;&#9993; Corresponding Author</div>
 
     <div class="btns reveal">
-      <a class="btn" href="https://fenghora.github.io/DiT360-Page/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7M21 3l-9 9M19 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg>
-        Project Page
-      </a>
-      <a class="btn ghost" href="#" target="_blank" rel="noopener">
+      <a class="btn" href="#" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v6h6"/></svg>
         Paper (arXiv)
       </a>
-      <a class="btn ghost" href="#" target="_blank" rel="noopener">
+      <a class="btn ghost" href="https://github.com/Insta360-Research-Team/Canvas360" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 6.2-1.5 6.2-6.7A5.2 5.2 0 0 0 20 4.8a4.9 4.9 0 0 0-.1-3.6s-1.1-.3-3.7 1.4a12.7 12.7 0 0 0-6.8 0C6.8.9 5.7 1.2 5.7 1.2A4.9 4.9 0 0 0 5.5 4.8 5.2 5.2 0 0 0 4 8.5c0 5.2 3.2 6.4 6.2 6.7a3.4 3.4 0 0 0-.9 2.6V21"/></svg>
         Code
+      </a>
+      <a class="btn ghost" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5z"/><path d="M12 22V12M3 7l9 5 9-5"/></svg>
+        Model
       </a>
       <a class="btn ghost" href="#dataset">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg>
@@ -77,9 +79,33 @@
 <div class="wrap teaser reveal">
   <figure class="figure">
     <img src="static/images/teaser.jpg" alt="Canvas360 results across tasks" loading="eager">
-    <figcaption>Visualization of <b>Canvas360</b>'s results, spanning text-to-panorama generation, inpainting, outpainting, panorama editing, and style transfer. The model captures a rich panoramic prior and supports a wide range of downstream applications. <em>Click any figure to enlarge.</em></figcaption>
+    <figcaption>Visualization of <b>Canvas360</b>'s results, spanning text-to-panorama generation, inpainting, outpainting, panorama editing, and style transfer. The model captures a rich panoramic prior and supports a wide range of downstream applications.</figcaption>
   </figure>
 </div>
+
+<!-- COMPARISON SHOWCASE -->
+<section id="comparison">
+  <div class="wrap">
+    <p class="section-tag reveal">Head-to-head</p>
+    <h2 class="section-title reveal">Comparison Against Prior Methods</h2>
+    <p class="section-lead reveal">Across both text-to-panorama synthesis and in-context tasks, Canvas360 delivers sharper distortion-aware details, cleaner structure, and seamless boundaries. Representative artifacts of competing methods are marked in red.</p>
+
+    <div class="stack">
+      <figure class="figure reveal">
+        <img src="static/images/half_comparison.jpg" alt="Qualitative comparison for panorama generation">
+        <figcaption><b>Text-to-panorama.</b> Canvas360 introduces depth to learn geometry-aware panoramic details globally, producing more accurate renderings that better respect panoramic projection distortions than PanFusion, SMGD, PAR, WorldGen, HunyuanWorld, and DiT360.</figcaption>
+      </figure>
+      <figure class="figure reveal">
+        <img src="static/images/applications_comparision.jpg" alt="In-context panoramic generation comparison">
+        <figcaption><b>In-context tasks.</b> On inpainting, outpainting, and editing, prior methods introduce blur or fail to apply correct panoramic distortion; Canvas360 generates panorama-consistent, artifact-free outputs with geometry-aware edits.</figcaption>
+      </figure>
+      <figure class="figure reveal">
+        <img src="static/images/appendix_style.jpg" alt="Style transfer qualitative comparison">
+        <figcaption><b>Style transfer.</b> Against FLUX.1-Kontext-dev, FLUX.2-dev, and Qwen-Image-Edit, Canvas360 better preserves geometric structure and content layout while producing visually coherent stylized panoramas.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
 
 <!-- ABSTRACT -->
 <section id="abstract">
@@ -134,38 +160,39 @@
     <h2 class="section-title reveal">A Two-Stage Framework</h2>
     <p class="section-lead reveal">Canvas360 first learns geometry-aware panoramic priors through text-to-panorama pretraining, then transfers them to downstream tasks via unified in-context fine-tuning.</p>
 
-    <figure class="figure reveal">
-      <img src="static/images/pipeline.jpg" alt="Canvas360 two-stage training pipeline">
-      <figcaption>Overview of the two-stage training pipeline. <b>Pretraining</b> uses 100K RGB&ndash;depth panoramas with parallel depth generation and velocity circular padding to instill geometric understanding. <b>Unified fine-tuning</b> leverages token-level concatenation to handle diverse contextual conditions across the 900K downstream samples.</figcaption>
-    </figure>
-
-    <div class="steps">
-      <div class="step reveal">
-        <div class="num">1</div>
-        <div>
-          <h3>Parallel Depth Generation</h3>
-          <p>RGB panoramas and depth maps are generated <span class="k">in parallel</span> via post-VAE sequence concatenation. A constant <span class="k">positional offset</span> along the 3D RoPE embedding disambiguates RGB and depth tokens, letting the model learn geometry-aware representations under spherical scene structure while integrating seamlessly with large pretrained models.</p>
+    <div class="method-split">
+      <figure class="figure reveal">
+        <img src="static/images/pipeline.jpg" alt="Canvas360 two-stage training pipeline">
+        <figcaption>Two-stage training pipeline. <b>Pretraining</b> uses 100K RGB&ndash;depth panoramas with parallel depth generation and velocity circular padding; <b>unified fine-tuning</b> uses token-level concatenation across 900K downstream samples.</figcaption>
+      </figure>
+      <div class="contrib-block reveal">
+        <div class="row">
+          <div class="cn">1</div>
+          <div>
+            <h3>Parallel Depth Generation</h3>
+            <p>RGB and depth generated in parallel via sequence concatenation, with a positional offset separating the two modalities.</p>
+          </div>
         </div>
-      </div>
-      <div class="step reveal">
-        <div class="num">2</div>
-        <div>
-          <h3>Velocity Circular Padding</h3>
-          <p>Ghost columns synchronize boundary features with their circular counterparts across the <span class="k">0&deg;/360&deg; seam</span>. By supervising the padded velocity field, the model explicitly observes wrap-around adjacency &mdash; delivering markedly better boundary continuity and edge alignment.</p>
+        <div class="row">
+          <div class="cn">2</div>
+          <div>
+            <h3>Velocity Circular Padding</h3>
+            <p>Ghost columns synchronize features across the 0&deg;/360&deg; seam, supervising boundary-consistent velocity prediction.</p>
+          </div>
         </div>
-      </div>
-      <div class="step reveal">
-        <div class="num">3</div>
-        <div>
-          <h3>Similarity Loss Regularization</h3>
-          <p>A regularizer penalizes excessive correlation between the RGB and depth predicted velocity fields, preventing a <span class="k">degenerate local optimum</span> where the two modalities collapse into similar outputs. This stabilizes RGB&ndash;depth co-training and suppresses over-darkened failure cases.</p>
+        <div class="row">
+          <div class="cn">3</div>
+          <div>
+            <h3>Similarity Loss Regularization</h3>
+            <p>Penalizes RGB&ndash;depth correlation to avoid degenerate collapse and suppress over-darkened failures.</p>
+          </div>
         </div>
-      </div>
-      <div class="step reveal">
-        <div class="num">4</div>
-        <div>
-          <h3>Unified In-context Fine-tuning</h3>
-          <p>All four downstream tasks share one training tuple of <span class="k">context, prompt, and target</span>. Building on pretrained spatial priors, the model operates under appearance-only supervision through token-level concatenation with positional offsets &mdash; a single versatile framework instead of task-specific models.</p>
+        <div class="row">
+          <div class="cn">4</div>
+          <div>
+            <h3>Unified In-context Fine-tuning</h3>
+            <p>One shared context&ndash;prompt&ndash;target formulation handles all four tasks under appearance-only supervision.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -184,23 +211,191 @@
       <figcaption>Data synthesis pipeline across four tasks. <b>(a) Style Transfer:</b> FLUX.2-dev generates stylized panoramas across 12 styles. <b>(b) Outpainting:</b> random camera parameters produce diverse perspective-view masks. <b>(c) Inpainting:</b> random rectangular masks with complementary global and local prompts. <b>(d) Editing:</b> VLMs and grounding models localize objects, then FLUX.2-dev removes them &mdash; pairs are inverted for both erasure and addition.</figcaption>
     </figure>
 
-    <div class="grid grid-2 reveal" style="margin-top:34px">
-      <div class="card">
-        <h3 style="color:var(--brand)">200K &middot; Style Transfer</h3>
-        <p>Stylized panoramas across 12 visual styles, curated with structural-consistency filtering between original and stylized line drawings.</p>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--brand)">250K &middot; Outpainting</h3>
-        <p>Yaw-shifted panoramas with inverse-projection masks from randomly sampled camera parameters, enabling perspective-to-panorama generation.</p>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--brand)">250K &middot; Inpainting</h3>
-        <p>Rectangular masks with two annotation types &mdash; global panorama-level prompts and local masked-region captions from a VLM.</p>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--brand)">200K &middot; Editing</h3>
-        <p>Grounded object removal via Florence2 + GroundingDINO and FLUX.2, with NanoBanana refinement on challenging small-object cases.</p>
-      </div>
+    <div class="reveal" style="margin-top:40px">
+      <h3 style="text-align:center;font-family:var(--serif);font-weight:500;font-size:1.5rem;margin:0 0 8px">Dataset Examples</h3>
+      <p style="text-align:center;color:var(--muted);margin:0 auto 26px;max-width:70ch">Paired input&ndash;output samples across the four tasks. Use the arrows to browse three examples per task.</p>
+        <div class="tabs" data-gallery>
+          <div class="tab active">Style Transfer</div>
+          <div class="tab">Inpainting</div>
+          <div class="tab">Outpainting</div>
+          <div class="tab">Editing</div>
+        </div>
+        <div class="gallery" id="gal-style_transfer">
+          <div class="track active">
+            <div class="pairs">
+              <div class="pair in"><div class="tag"><span class="d"></span>Source</div><img src="static/images/dataset/style_transfer_0_input.jpg" alt="Style Transfer input" loading="lazy"></div>
+              <div class="pair out"><div class="tag"><span class="d"></span>Stylized</div><img src="static/images/dataset/style_transfer_0_output.jpg" alt="Style Transfer output" loading="lazy"></div>
+            </div>
+            <div class="bar">
+              <div class="prompt"><b>Prompt:</b> Convert this panoramic image into retro pixel art style.</div>
+              <div class="navbtns">
+                <button onclick="galNav('style_transfer',-1)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="count">1 / 3</span>
+                <button onclick="galNav('style_transfer',1)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="pairs">
+              <div class="pair in"><div class="tag"><span class="d"></span>Source</div><img src="static/images/dataset/style_transfer_1_input.jpg" alt="Style Transfer input" loading="lazy"></div>
+              <div class="pair out"><div class="tag"><span class="d"></span>Stylized</div><img src="static/images/dataset/style_transfer_1_output.jpg" alt="Style Transfer output" loading="lazy"></div>
+            </div>
+            <div class="bar">
+              <div class="prompt"><b>Prompt:</b> Convert this panoramic image into anime style.</div>
+              <div class="navbtns">
+                <button onclick="galNav('style_transfer',-1)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="count">2 / 3</span>
+                <button onclick="galNav('style_transfer',1)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="pairs">
+              <div class="pair in"><div class="tag"><span class="d"></span>Source</div><img src="static/images/dataset/style_transfer_2_input.jpg" alt="Style Transfer input" loading="lazy"></div>
+              <div class="pair out"><div class="tag"><span class="d"></span>Stylized</div><img src="static/images/dataset/style_transfer_2_output.jpg" alt="Style Transfer output" loading="lazy"></div>
+            </div>
+            <div class="bar">
+              <div class="prompt"><b>Prompt:</b> Convert this panoramic image into watercolor painting style.</div>
+              <div class="navbtns">
+                <button onclick="galNav('style_transfer',-1)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="count">3 / 3</span>
+                <button onclick="galNav('style_transfer',1)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="gallery" id="gal-inpainting" style="display:none">
+          <div class="track active">
+            <div class="pairs">
+              <div class="pair in"><div class="tag"><span class="d"></span>Masked Input</div><img src="static/images/dataset/inpainting_0_input.jpg" alt="Inpainting input" loading="lazy"></div>
+              <div class="pair out"><div class="tag"><span class="d"></span>Completed</div><img src="static/images/dataset/inpainting_0_output.jpg" alt="Inpainting output" loading="lazy"></div>
+            </div>
+            <div class="bar">
+              <div class="prompt"><b>Prompt:</b> Complete the masked region with a bathroom with a towel rack, toilet, and door.</div>
+              <div class="navbtns">
+                <button onclick="galNav('inpainting',-1)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="count">1 / 3</span>
+                <button onclick="galNav('inpainting',1)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="pairs">
+              <div class="pair in"><div class="tag"><span class="d"></span>Masked Input</div><img src="static/images/dataset/inpainting_1_input.jpg" alt="Inpainting input" loading="lazy"></div>
+              <div class="pair out"><div class="tag"><span class="d"></span>Completed</div><img src="static/images/dataset/inpainting_1_output.jpg" alt="Inpainting output" loading="lazy"></div>
+            </div>
+            <div class="bar">
+              <div class="prompt"><b>Prompt:</b> Complete the masked region with a modern bedroom with a curved ceiling, large glass doors opening to a scenic view of a hillside community, and a bed with blue pillows.</div>
+              <div class="navbtns">
+                <button onclick="galNav('inpainting',-1)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="count">2 / 3</span>
+                <button onclick="galNav('inpainting',1)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="pairs">
+              <div class="pair in"><div class="tag"><span class="d"></span>Masked Input</div><img src="static/images/dataset/inpainting_2_input.jpg" alt="Inpainting input" loading="lazy"></div>
+              <div class="pair out"><div class="tag"><span class="d"></span>Completed</div><img src="static/images/dataset/inpainting_2_output.jpg" alt="Inpainting output" loading="lazy"></div>
+            </div>
+            <div class="bar">
+              <div class="prompt"><b>Prompt:</b> Complete the masked region with a modern library with curved bookshelves and aquariums.</div>
+              <div class="navbtns">
+                <button onclick="galNav('inpainting',-1)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="count">3 / 3</span>
+                <button onclick="galNav('inpainting',1)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="gallery" id="gal-outpainting" style="display:none">
+          <div class="track active">
+            <div class="pairs">
+              <div class="pair in"><div class="tag"><span class="d"></span>Masked Input</div><img src="static/images/dataset/outpainting_0_input.jpg" alt="Outpainting input" loading="lazy"></div>
+              <div class="pair out"><div class="tag"><span class="d"></span>Outpainted</div><img src="static/images/dataset/outpainting_0_output.jpg" alt="Outpainting output" loading="lazy"></div>
+            </div>
+            <div class="bar">
+              <div class="prompt"><b>Prompt:</b> This is a panorama. The image shows a vast desert landscape with towering dunes, viewed from above, beneath a dramatic sunset, with no person or human figure in sight.</div>
+              <div class="navbtns">
+                <button onclick="galNav('outpainting',-1)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="count">1 / 3</span>
+                <button onclick="galNav('outpainting',1)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="pairs">
+              <div class="pair in"><div class="tag"><span class="d"></span>Masked Input</div><img src="static/images/dataset/outpainting_1_input.jpg" alt="Outpainting input" loading="lazy"></div>
+              <div class="pair out"><div class="tag"><span class="d"></span>Outpainted</div><img src="static/images/dataset/outpainting_1_output.jpg" alt="Outpainting output" loading="lazy"></div>
+            </div>
+            <div class="bar">
+              <div class="prompt"><b>Prompt:</b> The image shows a panoramic view of a modern building entrance with a wooden paneled wall, a glass elevator, and a hallway leading to various rooms.</div>
+              <div class="navbtns">
+                <button onclick="galNav('outpainting',-1)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="count">2 / 3</span>
+                <button onclick="galNav('outpainting',1)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="pairs">
+              <div class="pair in"><div class="tag"><span class="d"></span>Masked Input</div><img src="static/images/dataset/outpainting_2_input.jpg" alt="Outpainting input" loading="lazy"></div>
+              <div class="pair out"><div class="tag"><span class="d"></span>Outpainted</div><img src="static/images/dataset/outpainting_2_output.jpg" alt="Outpainting output" loading="lazy"></div>
+            </div>
+            <div class="bar">
+              <div class="prompt"><b>Prompt:</b> The image depicts a modern office hallway with glass walls, wooden doors, and bright overhead lighting, creating a clean and professional environment.</div>
+              <div class="navbtns">
+                <button onclick="galNav('outpainting',-1)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="count">3 / 3</span>
+                <button onclick="galNav('outpainting',1)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="gallery" id="gal-editing" style="display:none">
+          <div class="track active">
+            <div class="pairs">
+              <div class="pair in"><div class="tag"><span class="d"></span>Input</div><img src="static/images/dataset/editing_0_input.jpg" alt="Editing input" loading="lazy"></div>
+              <div class="pair out"><div class="tag"><span class="d"></span>Edited</div><img src="static/images/dataset/editing_0_output.jpg" alt="Editing output" loading="lazy"></div>
+            </div>
+            <div class="bar">
+              <div class="prompt"><b>Prompt:</b> Add a black massage chair in the foreground, to the left of the center.</div>
+              <div class="navbtns">
+                <button onclick="galNav('editing',-1)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="count">1 / 3</span>
+                <button onclick="galNav('editing',1)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="pairs">
+              <div class="pair in"><div class="tag"><span class="d"></span>Input</div><img src="static/images/dataset/editing_1_input.jpg" alt="Editing input" loading="lazy"></div>
+              <div class="pair out"><div class="tag"><span class="d"></span>Edited</div><img src="static/images/dataset/editing_1_output.jpg" alt="Editing output" loading="lazy"></div>
+            </div>
+            <div class="bar">
+              <div class="prompt"><b>Prompt:</b> Remove the dark wood coat rack standing in the alcove next to the fireplace.</div>
+              <div class="navbtns">
+                <button onclick="galNav('editing',-1)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="count">2 / 3</span>
+                <button onclick="galNav('editing',1)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="pairs">
+              <div class="pair in"><div class="tag"><span class="d"></span>Input</div><img src="static/images/dataset/editing_2_input.jpg" alt="Editing input" loading="lazy"></div>
+              <div class="pair out"><div class="tag"><span class="d"></span>Edited</div><img src="static/images/dataset/editing_2_output.jpg" alt="Editing output" loading="lazy"></div>
+            </div>
+            <div class="bar">
+              <div class="prompt"><b>Prompt:</b> Replace the single, prominent pine tree on the left side of the clearing with a small cluster of three smaller pine trees.</div>
+              <div class="navbtns">
+                <button onclick="galNav('editing',-1)" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+                <span class="count">3 / 3</span>
+                <button onclick="galNav('editing',1)" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
   </div>
 </section>
@@ -209,8 +404,8 @@
 <section id="results">
   <div class="wrap">
     <p class="section-tag reveal">Evaluation</p>
-    <h2 class="section-title reveal">Text-to-Panorama Results</h2>
-    <p class="section-lead reveal">Canvas360 achieves state-of-the-art panorama-specific fidelity (FAED) and leading perceptual quality, while remaining competitive across all reported metrics.</p>
+    <h2 class="section-title reveal">Quantitative Results</h2>
+    <p class="section-lead reveal">Canvas360 achieves state-of-the-art panorama-specific fidelity (FAED) and leading perceptual quality on text-to-panorama generation, and consistently leads across the in-context tasks of style transfer, inpainting, outpainting, and editing.</p>
 
     <div class="table-wrap reveal">
       <table>
@@ -239,40 +434,62 @@
       <span>&darr; lower is better&emsp;&uarr; higher is better</span>
     </div>
 
-    <figure class="figure reveal" style="margin-top:44px">
-      <img src="static/images/half_comparison.jpg" alt="Qualitative comparison for panorama generation">
-      <figcaption>Qualitative comparison for panorama generation, with representative artifacts highlighted in red boxes. Canvas360 introduces depth to learn geometry-aware panoramic details globally, producing more accurate renderings that better respect panoramic projection distortions.</figcaption>
-    </figure>
-
-    <div class="grid grid-2 reveal" style="margin-top:34px">
+    <div class="grid grid-2 reveal" style="margin-top:44px">
       <div class="table-wrap">
         <table>
-          <caption>User study (71 participants). Preference across four criteria.</caption>
-          <thead><tr><th>Method</th><th>TA&uarr;</th><th>BC&uarr;</th><th>PA&uarr;</th><th>OQ&uarr;</th></tr></thead>
+          <caption>Style transfer. CP: content preservation, SR: style resemblance, OV: overall vision. Higher is better.</caption>
+          <thead><tr><th>Method</th><th>CP&uarr;</th><th>SR&uarr;</th><th>OV&uarr;</th></tr></thead>
           <tbody>
-            <tr><td>Matrix-3D</td><td>23.0%</td><td>20.0%</td><td>16.8%</td><td>15.3%</td></tr>
-            <tr><td>HunyuanWorld</td><td class="best">26.9%</td><td>20.9%</td><td>20.5%</td><td>18.1%</td></tr>
-            <tr><td>DiT360</td><td>23.9%</td><td>28.0%</td><td>28.6%</td><td>30.7%</td></tr>
-            <tr class="ours"><td>Ours</td><td>26.2%</td><td class="best">31.1%</td><td class="best">34.1%</td><td class="best">35.9%</td></tr>
+            <tr><td>FLUX.1-Kontext-dev</td><td>0.457</td><td>0.482</td><td>0.467</td></tr>
+            <tr><td>FLUX.2-dev</td><td>0.490</td><td class="best">0.503</td><td>0.495</td></tr>
+            <tr><td>Qwen-Image-Edit</td><td>0.464</td><td>0.483</td><td>0.471</td></tr>
+            <tr class="ours"><td>Ours</td><td class="best">0.502</td><td>0.491</td><td class="best">0.497</td></tr>
           </tbody>
         </table>
       </div>
       <div class="table-wrap">
         <table>
-          <caption>Boundary consistency (LRCE-RGB). Lower is better.</caption>
-          <thead><tr><th>Method</th><th>LRCE-RGB&darr;</th></tr></thead>
+          <caption>Editing. Lower LPIPS/FAED and higher PSNR are better.</caption>
+          <thead><tr><th>Method</th><th>LPIPS&darr;</th><th>FAED&darr;</th><th>PSNR&uarr;</th></tr></thead>
           <tbody>
-            <tr><td>PanFusion</td><td>0.0154</td></tr>
-            <tr><td>SMGD</td><td>0.0146</td></tr>
-            <tr><td>WorldGen</td><td>0.0152</td></tr>
-            <tr><td>HunyuanWorld</td><td>0.0094</td></tr>
-            <tr><td>DiT360</td><td>0.0101</td></tr>
-            <tr class="ours"><td>Ours</td><td class="best">0.0063</td></tr>
+            <tr><td>FLUX.1-Kontext-dev</td><td>0.102</td><td>0.458</td><td>25.77</td></tr>
+            <tr><td>FLUX.2-dev</td><td>0.099</td><td>0.410</td><td>26.17</td></tr>
+            <tr><td>NanoBanana</td><td>0.094</td><td>0.395</td><td>25.91</td></tr>
+            <tr><td>SE360</td><td>0.138</td><td>0.386</td><td>25.16</td></tr>
+            <tr><td>Omni2</td><td>0.105</td><td>0.392</td><td>25.03</td></tr>
+            <tr class="ours"><td>Ours</td><td class="best">0.084</td><td class="best">0.358</td><td class="best">26.40</td></tr>
           </tbody>
         </table>
       </div>
     </div>
-    <p class="cap reveal" style="text-align:center;max-width:70ch;margin:16px auto 0">TA: text alignment&emsp;BC: boundary continuity&emsp;PA: panorama awareness&emsp;OQ: overall quality. Canvas360 achieves the highest preference on BC, PA, and OQ, and the best left-to-right boundary consistency among all methods.</p>
+
+    <div class="grid grid-2 reveal" style="margin-top:22px">
+      <div class="table-wrap">
+        <table>
+          <caption>Inpainting. Lower LPIPS/FAED and higher PSNR are better.</caption>
+          <thead><tr><th>Method</th><th>LPIPS&darr;</th><th>FAED&darr;</th><th>PSNR&uarr;</th></tr></thead>
+          <tbody>
+            <tr><td>Flux.1-Fill-dev</td><td>0.171</td><td>0.461</td><td>24.23</td></tr>
+            <tr><td>PAR</td><td>0.158</td><td>0.455</td><td>23.76</td></tr>
+            <tr><td>PanoDiffusion</td><td>0.147</td><td>0.523</td><td>23.93</td></tr>
+            <tr class="ours"><td>Ours</td><td class="best">0.096</td><td class="best">0.371</td><td class="best">25.87</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <caption>Outpainting. Lower LPIPS/FAED and higher PSNR are better.</caption>
+          <thead><tr><th>Method</th><th>LPIPS&darr;</th><th>FAED&darr;</th><th>PSNR&uarr;</th></tr></thead>
+          <tbody>
+            <tr><td>Flux.1-Fill-dev</td><td>0.509</td><td>1.916</td><td>16.32</td></tr>
+            <tr><td>PAR</td><td>0.553</td><td>1.849</td><td>16.71</td></tr>
+            <tr><td>PanoDiffusion</td><td>0.674</td><td>1.989</td><td>15.21</td></tr>
+            <tr class="ours"><td>Ours</td><td class="best">0.416</td><td class="best">1.791</td><td class="best">17.16</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="cap reveal" style="text-align:center;max-width:82ch;margin:16px auto 0">Across all four in-context tasks, Canvas360 leads on nearly every metric &mdash; strongest content preservation and overall vision in style transfer, and the best perceptual similarity (LPIPS), panorama fidelity (FAED), and reconstruction accuracy (PSNR) in inpainting, outpainting, and editing.</p>
   </div>
 </section>
 
@@ -285,18 +502,12 @@
 
     <div class="reveal">
       <div class="tabs">
-        <div class="tab active">Comparison</div>
-        <div class="tab">Editing</div>
-        <div class="tab">Style Transfer</div>
+        <div class="tab active">Editing</div>
+        <div class="tab">Predicted Depth</div>
         <div class="tab">More Results</div>
+        <div class="tab">More Editing</div>
       </div>
       <div class="panel active">
-        <figure class="figure">
-          <img src="static/images/applications_comparision.jpg" alt="In-context panoramic generation comparison">
-          <figcaption>Qualitative comparison for in-context panoramic generation (inpainting, outpainting, editing). Prior methods introduce blur or fail to apply correct panoramic distortion; Canvas360 generates panorama-consistent, artifact-free outputs with geometry-aware edits.</figcaption>
-        </figure>
-      </div>
-      <div class="panel">
         <figure class="figure">
           <img src="static/images/appendix_editing.jpg" alt="Editing qualitative comparison">
           <figcaption>Qualitative comparison for panorama editing. Canvas360 produces more faithful edits while better preserving panoramic geometry and surrounding-content consistency, achieving the best LPIPS (0.084), FAED (0.358), and PSNR (26.40).</figcaption>
@@ -304,14 +515,20 @@
       </div>
       <div class="panel">
         <figure class="figure">
-          <img src="static/images/appendix_style.jpg" alt="Style transfer qualitative comparison">
-          <figcaption>Qualitative comparison for style transfer. Canvas360 preserves geometric structure and content layout while producing visually coherent stylized results, achieving the best content preservation and overall vision scores.</figcaption>
+          <img src="static/images/appendix_depth_prediction.jpg" alt="Predicted depth maps">
+          <figcaption>Predicted depth maps generated by Canvas360. The depth branch is structurally aligned with the panoramic scenes, showing that it captures meaningful geometric information rather than auxiliary noise &mdash; effective guidance for in-context panoramic generation.</figcaption>
         </figure>
       </div>
       <div class="panel">
         <figure class="figure">
           <img src="static/images/app_more_results.jpg" alt="More Canvas360 results">
           <figcaption>Additional in-context panoramic generation results. Across all tasks, Canvas360 consistently produces high-fidelity, visually coherent panoramas with distortion-consistent details and strong seam continuity.</figcaption>
+        </figure>
+      </div>
+      <div class="panel">
+        <figure class="figure">
+          <img src="static/images/app_more_editing_results.jpg" alt="More Canvas360 editing results">
+          <figcaption>More panorama editing results from Canvas360, showing geometry-consistent object addition and removal with correct panoramic distortion across diverse scenes.</figcaption>
         </figure>
       </div>
     </div>
@@ -351,7 +568,7 @@
       <button class="copy-btn" onclick="copyBib(this)">Copy</button>
 <pre id="bib"><span class="k">@article</span>{feng2026canvas360,
   <span class="k">title</span>   = {<span class="s">Enhancing In-context Panoramic Generation via Geometric-aware Pretraining</span>},
-  <span class="k">author</span>  = {<span class="s">Feng, Haoran and Zhang, Ruiyang and Zhang, Dizhe and Qi, Lu</span>},
+  <span class="k">author</span>  = {<span class="s">Feng, Haoran and Zhang, Ruiyang and Zhang, Longyi and Zhang, Dizhe and Qi, Lu</span>},
   <span class="k">journal</span> = {<span class="s">arXiv preprint</span>},
   <span class="k">year</span>    = {<span class="s">2026</span>}
 }</pre>
