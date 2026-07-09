@@ -97,41 +97,41 @@ function initRippleCanvas() {
     float noise(vec2 p){ vec2 i=floor(p); vec2 f=fract(p); f=f*f*(3.0-2.0*f);
       float a=hash(i), b=hash(i+vec2(1.0,0.0)), c=hash(i+vec2(0.0,1.0)), d=hash(i+vec2(1.0,1.0));
       return mix(mix(a,b,f.x),mix(c,d,f.x),f.y); }
-    float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<4;i++){ v+=a*noise(p); p*=2.0; a*=0.5; } return v; }
-    float gridLine(float v,float w){ return smoothstep(1.0-w,1.0,abs(sin(v*3.14159265))); }
+    float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<5;i++){ v+=a*noise(p); p*=2.0; a*=0.5; } return v; }
     void main(){
       vec2 uv = gl_FragCoord.xy / uResolution;
       float aspect = uResolution.x / uResolution.y;
       vec2 st = (uv-0.5)*vec2(aspect,1.0);
-      float t = uTime*0.4;
+      float t = uTime*0.15;
       vec2 mouse = (uMouse-0.5)*vec2(aspect,1.0);
-      st += mouse*0.12;
-      float n = fbm(st*1.6 + vec2(t*0.06,-t*0.04));
-      st += vec2(n*0.06, n*0.04);
-      float r = length(st);
-      float angle = atan(st.y, st.x);
-      float lat = gridLine(st.y*8.0 + n*1.0 - t*0.28, 0.038);
-      float lon = gridLine(angle*6.5 + r*4.8 - t*0.38 + n*0.6, 0.032);
-      float equator = gridLine(st.y*2.0 - t*0.15, 0.022);
-      float seam = gridLine(st.x*11.0 + t*0.22, 0.018);
-      float grid = max(lat, lon);
-      grid = max(grid, equator*0.55);
-      grid = max(grid, seam*0.45);
-      grid *= 1.0 - smoothstep(0.58,1.08,r);
-      float bands = sin(st.x*5.0 + st.y*1.5 + t*0.45 + n*1.8);
-      bands = smoothstep(0.52,0.92,bands)*0.12;
-      bands *= 1.0 - smoothstep(0.42,0.98,r);
-      float pattern = clamp(grid + bands, 0.0, 1.0);
-      vec3 baseTop = vec3(0.93,0.94,0.99);
-      vec3 baseMid = vec3(0.97,0.98,1.0);
-      vec3 baseBot = vec3(0.96,0.96,1.0);
-      vec3 base = mix(mix(baseTop,baseMid,smoothstep(0.0,0.55,uv.y)), baseBot, smoothstep(0.55,1.0,uv.y));
-      vec3 brandA = vec3(0.427,0.369,0.988);  // #6d5efc purple
-      vec3 brandB = vec3(0.133,0.722,0.812);  // #22b8cf cyan
-      vec3 accent = mix(brandA, brandB, 0.5 + 0.5*sin(t*0.25 + r*1.8 + angle));
-      vec3 color = mix(base, accent, pattern*0.30);
-      float glow = exp(-r*r*2.0)*0.05;
-      color += brandB*glow;
+
+      // domain-warped flowing noise (aurora / silk ribbons)
+      vec2 p = st*1.5 + mouse*0.15;
+      vec2 q = vec2(fbm(p + vec2(0.0, t)), fbm(p + vec2(5.2, -t*0.8)));
+      vec2 r2 = vec2(fbm(p + 4.0*q + vec2(1.7, 9.2) + t*0.3),
+                     fbm(p + 4.0*q + vec2(8.3, 2.8) - t*0.25));
+      float f = fbm(p + 4.0*r2);
+
+      // soft light base
+      vec3 base = mix(vec3(0.95,0.96,1.0), vec3(0.93,0.95,0.99), uv.y);
+
+      vec3 purple = vec3(0.427,0.369,0.988); // #6d5efc
+      vec3 cyan   = vec3(0.133,0.722,0.812); // #22b8cf
+      vec3 coral  = vec3(1.0,0.478,0.349);   // #ff7a59
+
+      vec3 flow = mix(purple, cyan, clamp(f*1.4, 0.0, 1.0));
+      flow = mix(flow, coral, clamp(length(r2)*0.6, 0.0, 1.0));
+
+      // ribbon intensity from the warped field
+      float ribbon = smoothstep(0.15, 0.95, f + 0.25*length(q));
+      float intensity = ribbon * (0.28 + 0.12*sin(t*2.0 + f*6.0));
+
+      vec3 color = mix(base, flow, clamp(intensity, 0.0, 0.42));
+
+      // subtle vignette to keep center airy for the text
+      float vig = 1.0 - smoothstep(0.35, 1.15, length(st));
+      color = mix(color, base, (1.0-vig)*0.35);
+
       gl_FragColor = vec4(color, 1.0);
     }`;
 
@@ -286,14 +286,81 @@ function initBubbles() {
   const mouse = new THREE.Vector2(10, 10);
   let hovered = null;
   const dom = renderer.domElement;
-  dom.addEventListener('mousemove', (e) => {
+
+  // --- drag state ---
+  let dragged = null;       // group being dragged
+  let dragMoved = 0;        // accumulated pointer movement (to tell click from drag)
+  let downPos = null;
+  const dragPlane = new THREE.Plane();
+  const planeNormal = new THREE.Vector3(0, 0, 1);
+  const dragPoint = new THREE.Vector3();
+  const dragOffset = new THREE.Vector3();
+
+  function pointer(e) {
     const r = dom.getBoundingClientRect();
-    mouse.x = ((e.clientX - r.left) / r.width) * 2 - 1;
-    mouse.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX);
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY);
+    return {
+      x: ((cx - r.left) / r.width) * 2 - 1,
+      y: -((cy - r.top) / r.height) * 2 + 1,
+      sx: cx, sy: cy,
+    };
+  }
+
+  dom.addEventListener('mousemove', (e) => {
+    const p = pointer(e);
+    mouse.x = p.x; mouse.y = p.y;
+    if (dragged) {
+      dragMoved += Math.abs(e.movementX || 0) + Math.abs(e.movementY || 0);
+      raycaster.setFromCamera(mouse, camera);
+      if (raycaster.ray.intersectPlane(dragPlane, dragPoint)) {
+        dragged.position.copy(dragPoint.add(dragOffset));
+      }
+    }
   });
-  dom.addEventListener('click', () => {
-    if (hovered) openLightbox(bubbleImgs[hovered.userData.imgIndex]);
-  });
+
+  function startDrag(p) {
+    mouse.x = p.x; mouse.y = p.y;
+    raycaster.setFromCamera(mouse, camera);
+    const hits = raycaster.intersectObjects(spheres.map(s => s.children[0]));
+    if (hits.length === 0) return;
+    dragged = hits[0].object.parent;
+    dragMoved = 0;
+    downPos = { x: p.sx, y: p.sy };
+    // build a drag plane facing the camera at the bubble's depth
+    planeNormal.copy(camera.getWorldDirection(new THREE.Vector3())).negate();
+    dragPlane.setFromNormalAndCoplanarPoint(planeNormal, dragged.position);
+    raycaster.ray.intersectPlane(dragPlane, dragPoint);
+    dragOffset.copy(dragged.position).sub(dragPoint);
+    dom.style.cursor = 'grabbing';
+  }
+
+  function endDrag(p) {
+    if (!dragged) return;
+    const moved = downPos && p ? Math.hypot(p.sx - downPos.x, p.sy - downPos.y) : dragMoved;
+    const idx = dragged.userData.imgIndex;
+    // settle new base position so the float animation continues from here
+    dragged.userData.baseX = dragged.position.x;
+    dragged.userData.baseY = dragged.position.y;
+    dragged.userData.phase = 0;
+    dragged = null;
+    dom.style.cursor = 'grab';
+    // treat as a click if the pointer barely moved
+    if (moved < 6) openPano360(bubbleImgs[idx]);
+  }
+
+  dom.addEventListener('mousedown', (e) => { e.preventDefault(); startDrag(pointer(e)); });
+  window.addEventListener('mouseup', (e) => endDrag(e.touches ? null : { sx: e.clientX, sy: e.clientY }));
+  dom.addEventListener('touchstart', (e) => { startDrag(pointer(e)); }, { passive: true });
+  dom.addEventListener('touchmove', (e) => {
+    if (!dragged) return;
+    const p = pointer(e);
+    mouse.x = p.x; mouse.y = p.y;
+    dragMoved += 10;
+    raycaster.setFromCamera(mouse, camera);
+    if (raycaster.ray.intersectPlane(dragPlane, dragPoint)) dragged.position.copy(dragPoint.add(dragOffset));
+  }, { passive: true });
+  dom.addEventListener('touchend', () => endDrag(null));
 
   let hidden = false;
   window.addEventListener('scroll', () => {
@@ -312,13 +379,14 @@ function initBubbles() {
       const hit = hits[0].object.parent;
       hit.userData.hovering = true;
       hit.userData.mat.uniforms.uHover.value = 1;
-      dom.style.cursor = 'pointer';
+      if (!dragged) dom.style.cursor = 'grab';
       hovered = hit;
-    } else { dom.style.cursor = 'default'; hovered = null; }
+    } else { if (!dragged) dom.style.cursor = 'default'; hovered = null; }
     spheres.forEach(s => {
       const u = s.userData;
       const side = configs[u.imgIndex].side;
-      if (!u.hovering) {
+      // frozen while being dragged
+      if (!u.hovering && s !== dragged) {
         s.position.y = u.baseY + Math.sin(time * u.speed + u.phase) * u.amp;
         // horizontal drift only pushes outward (away from centered text)
         const drift = (0.5 + 0.5 * Math.sin(time * u.speed * 0.7 + u.phase)) * u.amp * 0.5;
@@ -339,6 +407,132 @@ function initBubbles() {
     layout();
   });
 }
+
+/* ============================================================
+   360° panorama viewer (drag-to-look perspective view)
+   ============================================================ */
+const pano360 = {
+  scene: null, camera: null, renderer: null, mesh: null,
+  lon: 0, lat: 0, isDragging: false, px: 0, py: 0, plon: 0, plat: 0,
+  raf: null, holder: null,
+};
+
+function openPano360(src) {
+  const viewer = document.getElementById('pano-viewer');
+  const holder = document.getElementById('pano-canvas-holder');
+  const hint = document.getElementById('pano-hint');
+  if (!viewer || typeof THREE === 'undefined') { openLightbox(src); return; }
+
+  viewer.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  const w = holder.clientWidth, h = holder.clientHeight;
+
+  if (!pano360.renderer) {
+    pano360.holder = holder;
+    pano360.scene = new THREE.Scene();
+    pano360.camera = new THREE.PerspectiveCamera(72, w / h, 0.1, 100);
+    pano360.renderer = new THREE.WebGLRenderer({ antialias: true });
+    pano360.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    holder.appendChild(pano360.renderer.domElement);
+
+    // inside-out sphere: equirectangular panorama mapped to the interior
+    const geo = new THREE.SphereGeometry(50, 64, 40);
+    geo.scale(-1, 1, 1);
+    pano360.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial());
+    pano360.scene.add(pano360.mesh);
+
+    bindPanoControls(pano360.renderer.domElement);
+  }
+
+  pano360.renderer.setSize(w, h);
+  pano360.camera.aspect = w / h;
+  pano360.camera.updateProjectionMatrix();
+
+  // reset view direction
+  pano360.lon = 0; pano360.lat = 0;
+
+  const loader = new THREE.TextureLoader();
+  loader.load(src, (tex) => {
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.minFilter = THREE.LinearFilter;
+    if (pano360.mesh.material.map) pano360.mesh.material.map.dispose();
+    pano360.mesh.material.map = tex;
+    pano360.mesh.material.needsUpdate = true;
+  });
+
+  if (!pano360.raf) animatePano();
+
+  hint.classList.remove('hidden');
+  clearTimeout(pano360._hintTimer);
+  pano360._hintTimer = setTimeout(() => hint.classList.add('hidden'), 3200);
+}
+
+function closePano360() {
+  const viewer = document.getElementById('pano-viewer');
+  viewer.classList.remove('open');
+  document.body.style.overflow = '';
+  if (pano360.raf) { cancelAnimationFrame(pano360.raf); pano360.raf = null; }
+}
+
+function bindPanoControls(dom) {
+  const start = (x, y) => { pano360.isDragging = true; pano360.px = x; pano360.py = y; pano360.plon = pano360.lon; pano360.plat = pano360.lat; };
+  const move = (x, y) => {
+    if (!pano360.isDragging) return;
+    pano360.lon = (pano360.px - x) * 0.12 + pano360.plon;
+    pano360.lat = (y - pano360.py) * 0.12 + pano360.plat;
+    pano360.lat = Math.max(-85, Math.min(85, pano360.lat));
+    document.getElementById('pano-hint').classList.add('hidden');
+  };
+  const end = () => { pano360.isDragging = false; };
+
+  dom.addEventListener('mousedown', (e) => start(e.clientX, e.clientY));
+  window.addEventListener('mousemove', (e) => move(e.clientX, e.clientY));
+  window.addEventListener('mouseup', end);
+  dom.addEventListener('touchstart', (e) => { const t = e.touches[0]; start(t.clientX, t.clientY); }, { passive: true });
+  dom.addEventListener('touchmove', (e) => { const t = e.touches[0]; move(t.clientX, t.clientY); }, { passive: true });
+  dom.addEventListener('touchend', end);
+  // wheel to zoom (adjust FOV)
+  dom.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    pano360.camera.fov = Math.max(35, Math.min(95, pano360.camera.fov + e.deltaY * 0.03));
+    pano360.camera.updateProjectionMatrix();
+  }, { passive: false });
+}
+
+function animatePano() {
+  pano360.raf = requestAnimationFrame(animatePano);
+  // gentle auto-rotation until the user grabs it
+  if (!pano360.isDragging) pano360.lon += 0.03;
+  const phi = THREE.MathUtils.degToRad(90 - pano360.lat);
+  const theta = THREE.MathUtils.degToRad(pano360.lon);
+  const target = new THREE.Vector3(
+    Math.sin(phi) * Math.cos(theta),
+    Math.cos(phi),
+    Math.sin(phi) * Math.sin(theta)
+  );
+  pano360.camera.lookAt(target);
+  pano360.renderer.render(pano360.scene, pano360.camera);
+}
+
+window.addEventListener('resize', () => {
+  if (!pano360.renderer || !document.getElementById('pano-viewer').classList.contains('open')) return;
+  const w = pano360.holder.clientWidth, h = pano360.holder.clientHeight;
+  pano360.renderer.setSize(w, h);
+  pano360.camera.aspect = w / h;
+  pano360.camera.updateProjectionMatrix();
+});
+
+(function bindPanoViewerUI() {
+  const closeBtn = document.getElementById('pano-close');
+  const viewer = document.getElementById('pano-viewer');
+  if (closeBtn) closeBtn.addEventListener('click', closePano360);
+  // click on the dimmed backdrop (outside the viewer box) closes
+  if (viewer) viewer.addEventListener('click', (e) => { if (e.target === viewer) closePano360(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && viewer && viewer.classList.contains('open')) closePano360();
+  });
+})();
 
 function initHero() {
   try { initRippleCanvas(); } catch (e) { console.warn('ripple canvas failed:', e); }
