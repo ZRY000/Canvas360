@@ -340,5 +340,12 @@ function initBubbles() {
   });
 }
 
-initRippleCanvas();
-initBubbles();
+function initHero() {
+  try { initRippleCanvas(); } catch (e) { console.warn('ripple canvas failed:', e); }
+  try { initBubbles(); } catch (e) { console.warn('bubbles failed:', e); }
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initHero);
+} else {
+  initHero();
+}
