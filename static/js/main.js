@@ -177,12 +177,18 @@ function initBubbles() {
     'static/images/bubbles/bubble1.jpg',
     'static/images/bubbles/bubble2.jpg',
     'static/images/bubbles/bubble3.jpg',
+    'static/images/bubbles/bubble4.jpg',
+    'static/images/bubbles/bubble5.jpg',
+    'static/images/bubbles/bubble6.jpg',
   ];
   // side: -1 left / +1 right ; ny: vertical fraction of half-height ; scale
   const configs = [
-    { side: -1, ny: 0.44, z: -0.4, scale: 0.62 },
-    { side: 1, ny: 0.12, z: 0.0, scale: 0.78 },
-    { side: -1, ny: -0.52, z: 0.1, scale: 0.5 },
+    { side: -1, ny: 0.58, z: -0.4, scale: 0.5 },
+    { side: 1, ny: 0.5, z: 0.0, scale: 0.6 },
+    { side: -1, ny: 0.0, z: 0.1, scale: 0.62 },
+    { side: 1, ny: -0.05, z: -0.3, scale: 0.5 },
+    { side: -1, ny: -0.6, z: -0.1, scale: 0.52 },
+    { side: 1, ny: -0.62, z: 0.15, scale: 0.56 },
   ];
 
   const W = container.clientWidth, H = container.clientHeight || 600;
